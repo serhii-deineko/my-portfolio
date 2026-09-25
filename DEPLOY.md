@@ -6,12 +6,13 @@ file produced at build time or falls back to the client shell.
 
 ## What gets deployed
 
-| Item             | Value                                     |
-| ---------------- | ----------------------------------------- |
-| Firebase project | `serhii-deineko`                          |
-| Build command    | `yarn build`                              |
-| Uploaded folder  | `dist/browser` |
-| Live URL         | https://serhii-deineko.web.app            |
+| Item             | Value                          |
+| ---------------- | ------------------------------ |
+| Firebase project | `serhii-deineko`               |
+| Build command    | `yarn build`                   |
+| Uploaded folder  | `dist/browser`                 |
+| Live URL         | https://serhii.com.pl          |
+| Firebase default | https://serhii-deineko.web.app |
 
 `yarn build` is `ng build` with the default `production` configuration, which
 prerenders the home page and every project page into static HTML.
@@ -92,7 +93,10 @@ docker run -p 8080:80 portfolio
 
 ## Security notes
 
-- No API keys are bundled in the client; the app makes no backend calls other
-  than loading its own i18n JSON.
+- No API keys or secrets are bundled in the client. The app calls no backend of
+  its own — it only loads its own i18n JSON from the same origin.
+- Third-party requests are limited to Google Fonts (stylesheet + font files) and
+  the Umami analytics script on `cloud.umami.is`. Umami is cookieless and stores
+  no personal data, so the site needs no consent banner.
 - Hosting sends `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`,
   `Permissions-Policy` and HSTS on every response.

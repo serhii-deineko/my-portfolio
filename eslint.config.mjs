@@ -14,7 +14,8 @@ export default tseslint.config(
 			".firebase/**",
 			"node_modules/**",
 			"functions/**",
-			"public/**"
+			"public/**",
+			"spike/**"
 		]
 	},
 	{

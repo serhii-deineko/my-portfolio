@@ -4,21 +4,26 @@
 # TEAM
 
     Developer: Serhii Deineko
-    Contact: your-email [at] domain.com
+    Contact: serhii.deineko [at] gmail.com
+    Site: https://serhii.com.pl
     From: Ukraine
 
 # THANKS
 
     Angular Team
     Material Design Team
-    Font Awesome
     Google Fonts
+    Umami Analytics
 
 # TECHNOLOGY COLOPHON
 
     Frontend: Angular 22, TypeScript, SCSS
-    Icons: Font Awesome, Material Icons
-    Fonts: Inter, Roboto
+    UI: Angular Material, Angular CDK
+    i18n: ngx-translate (EN, UA, DE, FR, PL)
+    Icons: Material Icons
+    Fonts: Inter Tight
     Build Tool: Angular CLI
+    Testing: Vitest
+    Hosting: Firebase Hosting
     Package Manager: Yarn
     Version Control: Git
