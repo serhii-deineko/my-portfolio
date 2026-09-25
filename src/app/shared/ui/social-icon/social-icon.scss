@@ -1,0 +1,30 @@
+:host {
+	display: block;
+	flex-shrink: 0;
+	filter: var(--social-icon-filter);
+	transition: var(--transition);
+	background: var(--social-icon-source) center / contain no-repeat;
+	width: var(--social-icon-size, 0.24rem);
+	height: var(--social-icon-size, 0.24rem);
+}
+
+:host(.social-icon--gmail) {
+	--social-icon-source: url("/icon/gmail.svg");
+}
+
+:host(.social-icon--telegram) {
+	--social-icon-source: url("/icon/telegram-mark.svg");
+	filter: var(--social-icon-filter-colored);
+}
+
+:host(.social-icon--whatsapp) {
+	--social-icon-source: url("/icon/whatsapp.svg");
+}
+
+:host(.social-icon--linkedin) {
+	--social-icon-source: url("/icon/linkedin-mark.svg");
+}
+
+:host(.social-icon--github) {
+	--social-icon-source: url("/icon/github.svg");
+}

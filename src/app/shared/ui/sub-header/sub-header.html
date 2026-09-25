@@ -1,0 +1,7 @@
+<h2 class="sub-header" [attr.id]="headingId() || null">
+	<ng-content />
+
+	@if (countLabel(); as label) {
+	<sup class="sub-header__count" aria-hidden="true">{{ label }}</sup>
+	}
+</h2>

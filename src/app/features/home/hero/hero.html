@@ -1,0 +1,59 @@
+<section class="hero" [class.hero--revealed]="!pageLoading.isLoading()" appPauseOffscreen>
+	<img
+		class="hero__image"
+		[class.hero__image--revealed]="!pageLoading.isLoading()"
+		[alt]="'uni.portrait' | translate"
+		src="/home/hero.png"
+		fetchpriority="high"
+		appHeroImage />
+
+	<div class="hero__content">
+		<p class="hero__subtitle">{{ "hero.subtitle" | translate }}</p>
+		<h1 class="hero__title">{{ "hero.title" | translate }}</h1>
+		<h2 class="hero__subtitle-large">{{ "hero.subtitleLarge" | translate }}</h2>
+
+		<div class="hero__description">
+			<p class="hero__paragraph">
+				{{ "hero.description.part1" | translate }} {{ "hero.description.part2" | translate
+				}}
+				<strong class="hero__strong">{{ "hero.description.emphasis1" | translate }}</strong>
+				{{ "hero.description.connector1" | translate }}
+				<span class="hero__em-underline">
+					{{ "hero.description.emphasis2" | translate }}
+				</span>
+				{{ "hero.description.connector2" | translate }}
+				<strong class="hero__strong">{{ "hero.description.emphasis3" | translate }}</strong>
+			</p>
+		</div>
+
+		<div class="hero__cta">
+			<app-cta-button
+				[buttonText]="'hero.cta.certificate' | translate"
+				[targetUrl]="'https://www.biznes.gov.pl/en/wyszukiwarka-firm/wpis/ceidg/6B03F41E-620E-45E3-975C-60F77E240B24'"
+				buttonIcon="arrow_outward" />
+
+			<app-cta-button
+				[buttonText]="'hero.cta.downloadCv' | translate"
+				[fileUrl]="'hero.cta.cvUrl' | translate"
+				buttonIcon="arrow_downward" />
+		</div>
+	</div>
+</section>
+
+<div class="splitter">
+	<div class="splitter__wrapper" appPauseOffscreen>
+		<ng-container *ngTemplateOutlet="marqueeTrack" />
+		<ng-container *ngTemplateOutlet="marqueeTrack; context: { duplicate: true }" />
+	</div>
+</div>
+
+<ng-template #marqueeTrack let-duplicate="duplicate">
+	<div class="splitter__content" [attr.aria-hidden]="duplicate ? 'true' : null">
+		@for (item of marqueeItems; track item.label) {
+		<div class="splitter__content-item">
+			<img class="splitter__icon" [src]="item.icon" alt="" />
+			<span class="splitter__label">{{ item.label }}</span>
+		</div>
+		}
+	</div>
+</ng-template>

@@ -1,0 +1,153 @@
+@use "@angular/material" as mat;
+@use "breakpoints" as *;
+
+$view-transition-duration: 0.48s;
+$view-transition-ease: cubic-bezier(0.42, 0, 0.58, 1);
+
+.cdk-overlay-container {
+	z-index: var(--z-overlay);
+}
+
+.mat-mdc-menu-panel {
+	@include mat.menu-overrides(
+		(
+			container-color: var(--bg),
+			container-shape: 8px,
+			container-elevation-shadow: none,
+			item-label-text-color: var(--text-color),
+			item-hover-state-layer-color: var(--bg-color-secondary),
+			item-leading-spacing: 16px,
+			item-trailing-spacing: 16px
+		)
+	);
+
+	margin-top: 12px;
+	border: 1px solid var(--border-color);
+	min-height: auto;
+	font-size: 14px;
+	line-height: normal;
+
+	.mat-mdc-menu-content {
+		margin: 0;
+		padding: 0;
+	}
+
+	.mat-mdc-menu-item {
+		margin: 0;
+		height: 40px;
+		min-height: 40px;
+		max-height: 40px;
+		font-size: 14px;
+		line-height: normal;
+
+		&:hover {
+			color: var(--text-color-highlight);
+		}
+	}
+
+	&.language-switcher-panel {
+		.mat-mdc-menu-item-text {
+			display: flex;
+			column-gap: 8px;
+			justify-content: start;
+			align-items: center;
+		}
+
+		.language-switcher-item {
+			&__label {
+				font-weight: 500;
+				font-size: 14px;
+				font-family: var(--font-mono);
+			}
+
+			&__emoji {
+				font-size: 18px;
+			}
+		}
+	}
+}
+
+body.dark-mode .mat-mdc-menu-panel {
+	@include mat.menu-overrides(
+		(
+			item-hover-state-layer-color: var(--bg-color-tertiary)
+		)
+	);
+}
+
+@include phone {
+	.mat-mdc-menu-panel {
+		@include mat.menu-overrides(
+			(
+				item-leading-spacing: 20px,
+				item-trailing-spacing: 20px
+			)
+		);
+
+		.mat-mdc-menu-item {
+			height: 48px;
+			min-height: 48px;
+			max-height: 48px;
+			font-size: 15px;
+		}
+
+		&.language-switcher-panel .language-switcher-item__label {
+			font-size: 15px;
+		}
+	}
+}
+
+.app__spinner .mat-mdc-progress-spinner {
+	--mdc-circular-progress-active-indicator-color: var(--accent-color);
+	--mat-sys-primary: var(--accent-color);
+
+	svg {
+		max-width: none;
+	}
+}
+
+::view-transition-group(*):not(::view-transition-group(root)) {
+	animation-duration: $view-transition-duration;
+	animation-timing-function: $view-transition-ease;
+}
+
+::view-transition-image-pair(*):not(::view-transition-image-pair(root)) {
+	isolation: isolate;
+}
+
+::view-transition-old(*):not(::view-transition-old(root)) {
+	mix-blend-mode: normal;
+	animation: caseSlideOldOut $view-transition-duration $view-transition-ease both;
+}
+
+::view-transition-new(*):not(::view-transition-new(root)) {
+	mix-blend-mode: normal;
+	animation: caseSlideNewIn $view-transition-duration $view-transition-ease both;
+}
+
+@keyframes caseSlideOldOut {
+	0% {
+		opacity: 1;
+	}
+	18% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+@keyframes caseSlideNewIn {
+	0% {
+		opacity: 0;
+	}
+	45% {
+		opacity: 0;
+	}
+	85% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 1;
+	}
+}

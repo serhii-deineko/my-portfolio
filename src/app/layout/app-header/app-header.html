@@ -1,0 +1,111 @@
+<nav class="header" [attr.aria-label]="'header.nav.main' | translate">
+	<div class="header__content">
+		<a class="header__logo" [attr.aria-label]="'header.home' | translate" href="/">
+			<img
+				class="header__logo-img"
+				src="/logo.png"
+				alt=""
+				width="46"
+				height="15"
+				loading="eager" />
+		</a>
+
+		<div class="header__nav header__nav--desktop">
+			<ol class="header__list" [class.header__list--scrolled]="isNavBackgroundVisible()">
+				@for (section of sections; track section.id) {
+				<li class="header__item">
+					<a
+						class="header__link"
+						[class.header__link--active]="activeSection() === section.id"
+						[attr.aria-current]="activeSection() === section.id ? 'true' : null"
+						(click)="scrollToSection(section.id, $event)"
+						[href]="'#' + section.id">
+						{{ section.labelKey | translate }}
+					</a>
+				</li>
+				}
+
+				<li class="header__item header__item--availability">
+					<span class="header__availability">
+						<span class="header__availability-dot" aria-hidden="true"></span>
+						{{ "header.availability" | translate }}
+					</span>
+				</li>
+
+				<li class="header__item header__item--switchers">
+					<app-theme-switcher />
+					<app-language-switcher />
+				</li>
+			</ol>
+		</div>
+
+		<div class="header__mobile-nav">
+			<div class="header__mobile-controls">
+				<button
+					class="header__burger"
+					#menuTrigger
+					[attr.aria-label]="'header.menu' | translate"
+					[attr.aria-expanded]="isMobileMenuOpen()"
+					(click)="toggleMobileMenu()"
+					type="button"
+					aria-controls="header-mobile-menu"
+					mat-icon-button>
+					<mat-icon class="header__burger-icon" fontIcon="menu" aria-hidden="true" />
+				</button>
+			</div>
+
+			<div
+				class="header__mobile-menu"
+				id="header-mobile-menu"
+				[class.header__mobile-menu--open]="isMobileMenuOpen()"
+				[attr.inert]="isMobileMenuOpen() ? null : ''"
+				[cdkTrapFocus]="isMobileMenuOpen()"
+				[cdkTrapFocusAutoCapture]="isMobileMenuOpen()">
+				<div
+					class="header__mobile-overlay"
+					(click)="closeMobileMenu()"
+					aria-hidden="true"></div>
+				<div class="header__mobile-content">
+					<div class="header__mobile-header header__item--switchers">
+						<div class="header__switcher-container">
+							<app-theme-switcher />
+							<app-language-switcher />
+						</div>
+						<button
+							class="header__burger"
+							[attr.aria-label]="'uni.close' | translate"
+							(click)="closeMobileMenu()"
+							type="button"
+							aria-controls="header-mobile-menu"
+							mat-icon-button>
+							<mat-icon
+								class="header__burger-icon"
+								fontIcon="close"
+								aria-hidden="true" />
+						</button>
+					</div>
+					<ol class="header__mobile-list">
+						@for (section of sections; track section.id) {
+						<li class="header__mobile-item">
+							<a
+								class="header__mobile-link"
+								[class.header__mobile-link--active]="
+										activeSection() === section.id
+									"
+								[attr.aria-current]="
+										activeSection() === section.id ? 'true' : null
+									"
+								(click)="
+										scrollToSection(section.id, $event); closeMobileMenu()
+									"
+								[href]="'#' + section.id">
+								{{ section.labelKey | translate }}
+							</a>
+						</li>
+						}
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+</nav>

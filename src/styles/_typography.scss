@@ -1,0 +1,22 @@
+@mixin type-mono-meta {
+	color: var(--text-color);
+	font-weight: 500;
+	font-size: var(--text-sm);
+	line-height: 1.35;
+	font-family: var(--font-mono);
+	letter-spacing: 0.035em;
+}
+
+@mixin type-mono-numeric {
+	@include type-mono-meta;
+	font-variant-numeric: tabular-nums;
+}
+
+@mixin type-heading-card {
+	color: var(--text-color-highlight);
+	font-weight: 600;
+	line-height: 1.25;
+	font-family: var(--font-display);
+	letter-spacing: -0.015em;
+	text-wrap: balance;
+}

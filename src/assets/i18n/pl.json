@@ -1,0 +1,366 @@
+{
+	"header": {
+		"home": "Strona główna",
+		"menu": "Menu",
+		"availability": "Dostępny do pracy",
+		"nav": {
+			"about": "O mnie",
+			"projects": "Projekty",
+			"experience": "Doświadczenie",
+			"contact": "Kontakt",
+			"main": "Nawigacja główna"
+		}
+	},
+	"hero": {
+		"subtitle": "Cześć, nazywam się",
+		"title": "Serhii Deineko.",
+		"subtitleLarge": "Tworzę rozwiązania IT dla biznesu.",
+		"description": {
+			"part1": "Jestem programistą z",
+			"part2": "",
+			"emphasis1": "5-letnim",
+			"connector1": " doświadczeniem specjalizujący się w programowaniu ",
+			"emphasis2": "nowoczesnych rozwiązań biznesowych",
+			"connector2": " w oparciu o ",
+			"emphasis3": "Angular."
+		},
+		"cta": {
+			"certificate": "Certyfikat w CEIDG",
+			"downloadCv": "Pobierz CV",
+			"cvUrl": "cv/pl/CV — Serhii Deineko.pdf"
+		}
+	},
+	"projects": {
+		"title": "Niektóre rozwiązania jakie zbudowałem",
+		"cta-button": {
+			"website": "Zobacz szczegóły"
+		},
+		"detail": {
+			"project": "Projekt",
+			"nav": "Wszystkie projekty",
+			"current": "Bieżący",
+			"stack": "Wykorzystane technologie",
+			"decisions": "Najważniejsze rozwiązania"
+		},
+		"items": [
+			{
+				"id": "logistics-genesys-cloud",
+				"title": "Platforma Komunikacji z Klientem dla InPost",
+				"description": "Jako frontend developer w Yarrl pracowałem nad projektem InPost — wewnętrzną aplikacją do centralizacji komunikacji z klientem, osadzoną w platformie Genesys Cloud. Obejmuje wyszukiwarkę z zaawansowanym filtrowaniem interakcji oraz moduł podglądu i zarządzania dla supervisorów.",
+				"small-description": "Jako frontend developer w <a href='https://yarrl.pl/' target='_blank'>Yarrl</a> odpowiadałem za całość frontendu aplikacji dla <a href='https://inpost.pl/' target='_blank'>InPost</a>, która służy do inteligentnego wyszukiwania i kompleksowej obsługi zapytań od klientów z różnych kanałów komunikacji.",
+				"key-points": [
+					{
+						"title": "Warstwowa architektura Angular",
+						"description": "Architektura frontendu w Angular 21 w trybie zoneless (Standalone) w warstwowej strukturze (Core / Pages / Shared) ze stanem na Angular Signals."
+					},
+					{
+						"title": "Komponenty świadome kontekstu",
+						"description": "Wzorzec komponentów świadomych kontekstu (dependency injection) obsługujący różne schematy tabel i filtrów."
+					},
+					{
+						"title": "Silnik operacji masowych",
+						"description": "Silnik operacji masowych oparty na RxJS z pollingiem zadań w tle i odzyskiwaniem sesji."
+					}
+				]
+			},
+			{
+				"id": "aisema-ai-grant-advisor",
+				"title": "Inteligentna platforma wyszukiwania finansowania UE 🇪🇺",
+				"description": "Jako frontend developer w Yarrl odpowiadałem za całość frontendu AISEMA — platformy SaaS ułatwiającej pozyskiwanie grantów UE (m.in. Horizon Europe). Pomaga badaczom i koordynatorom szybko znaleźć finansowanie i partnerów do projektów.",
+				"small-description": "Jako frontend developer w <a href='https://yarrl.pl/' target='_blank'>Yarrl</a> odpowiadałem za całość frontendu dla platformy <a href='https://aisema.com/' target='_blank'>AISEMA</a>, ułatwiającej pozyskiwanie grantów i partnerów do projektów.",
+				"key-points": [
+					{
+						"title": "Architektura SPA i stan",
+						"description": "Odpowiedzialność za całość warstwy klienckiej i architekturę SPA w Vue 3 (Composition API) z centralnym stanem (Pinia)."
+					},
+					{
+						"title": "Wielostopniowy kreator wyszukiwania",
+						"description": "Zaprojektowanie wielostopniowego kreatora wyszukiwania od konkursu, przez powiązane projekty, po dobór partnerów (sterowanego przewijaniem — IntersectionObserver)."
+					},
+					{
+						"title": "Dashboardy analityczne",
+						"description": "Implementacja interaktywnych dashboardów analitycznych z autorskim algorytmem rozsuwania nakładających się punktów dla gęstych zbiorów danych."
+					},
+					{
+						"title": "Warstwa danych i wizualizacje WebGL",
+						"description": "Warstwa normalizacji danych po stronie klienta oraz zaawansowana wizualizacja strony głównej (shadery WebGL)."
+					}
+				]
+			},
+			{
+				"id": "logistics-widget-callback",
+				"title": "Widget Callback dla InPost",
+				"description": "Jako frontend developer w Yarrl pracowałem nad projektem InPost — widgetem zamawiania oddzwonienia (z szacowanym czasem oczekiwania) lub rezerwacji terminu.",
+				"small-description": "Jako frontend developer w <a href='https://yarrl.pl/' target='_blank'>Yarrl</a> zbudowałem frontend widgetu <a href='https://inpost.pl/' target='_blank'>InPost</a>, który umożliwia zamówienie oddzwonienia lub rezerwację terminu rozmowy.",
+				"key-points": [
+					{
+						"title": "Architektura web componentu",
+						"description": "Pełna odpowiedzialność za architekturę: kompletny web component (@angular/elements) z izolacją w Shadow DOM i konfiguracją runtime przez atrybuty HTML."
+					},
+					{
+						"title": "Samowystarczalny bundle",
+						"description": "Optymalizacja samowystarczalnego bundla (inline assetów, fontów i tłumaczeń) bez dodatkowych żądań."
+					},
+					{
+						"title": "Dostępne formularze reaktywne",
+						"description": "Reaktywne formularze z dynamiczną walidacją i dialogi dostępne klawiaturą (a11y)."
+					}
+				]
+			},
+			{
+				"id": "speech-analysis-platform",
+				"title": "Korporacyjna Platforma Analizy Mowy",
+				"description": "Jako frontend developer w Yarrl rozwijałem korporacyjną platformę analizy mowy dla dużego call center — analiza rozmów i ocena jakości pracy konsultantów; wgrywanie i przetwarzanie nagrań, ocena, wizualizacje oraz raportowanie.",
+				"small-description": "Jako frontend developer w <a href='https://yarrl.pl/' target='_blank'>Yarrl</a> pracowałem nad platformą dla dużego call center, służącą do analizy rozmów i oceny jakości pracy konsultantów.",
+				"key-points": [
+					{
+						"title": "Architektura frontendu",
+						"description": "Pełna odpowiedzialność za architekturę frontendową aplikacji."
+					},
+					{
+						"title": "Hierarchiczny model uprawnień",
+						"description": "Zaprojektowanie rozbudowanego modelu uprawnień w dół struktury organizacyjnej (entity → client → project → campaign)."
+					},
+					{
+						"title": "Integracja korporacyjnego SSO",
+						"description": "Integracja korporacyjnego SSO (Microsoft Azure AD / MSAL) z federacyjną wymianą tokenów."
+					},
+					{
+						"title": "Synchronizacja audio i transkrypcji",
+						"description": "Interaktywny interfejs analizy z dwukierunkową synchronizacją odtwarzania audio i znakowanej czasem transkrypcji."
+					}
+				]
+			},
+			{
+				"id": "website-chatbot-plugin",
+				"title": "Widget Asystenta Zakupowego dla Producenta Mebli",
+				"description": "Jako frontend developer w Yarrl zbudowałem widget asystenta zakupowego prowadzący konwersację i prezentujący dopasowane produkty.",
+				"small-description": "Jako frontend developer w <a href='https://yarrl.pl/' target='_blank'>Yarrl</a> zbudowałem frontend widgetu asystenta zakupowego, który prowadzi konwersację, prezentuje dopasowane produkty i pomaga w procesie reklamacji.",
+				"key-points": [
+					{
+						"title": "Widget bez frameworków",
+						"description": "Samodzielne zbudowanie widgetu od podstaw w czystym JavaScript, z izolacją w Shadow DOM."
+					},
+					{
+						"title": "Osadzenie w jednym pliku",
+						"description": "Modułowa architektura z bundlingiem całości do pojedynczego pliku gotowego do wpięcia."
+					}
+				]
+			},
+			{
+				"id": "mobile-homes-configurator",
+				"title": "Konfigurator domów mobilnych",
+				"description": "Jako full stack developer w Lark zbudowałem interaktywną platformę do konfiguracji i wyceny domów, wspierającą proces sprzedaży oraz ograniczającą błędy w specyfikacjach zamówień.",
+				"small-description": "Jako full stack developer w <a href='https://larkfactory.com/' target='_blank'>Lark</a> zbudowałem interaktywny konfigurator domów mobilnych, wspierający proces sprzedaży i marketing.",
+				"key-points": [
+					{
+						"title": "Architektura bez frameworków",
+						"description": "Zbudowanie całej aplikacji od podstaw bez frameworków – autorska, modułowa architektura zarządzania stanem w czystym JavaScript."
+					},
+					{
+						"title": "Edytor tekstur na Canvas",
+						"description": "Zbudowanie interaktywnego edytora tekstur na HTML5 Canvas: maskowanie obszarów metodą drag-and-drop, skalowanie, wykrywanie krawędzi."
+					},
+					{
+						"title": "Dopasowywanie kolorów na żywo",
+						"description": "Autorski algorytm dopasowywania kolorów (RGB) do dynamicznej podmiany tekstur na żywo."
+					},
+					{
+						"title": "Backend i oferty PDF",
+						"description": "Backend w natywnym PHP/MySQL do zapisu konfiguracji; kliencka generacja oferty PDF z wyceną."
+					}
+				]
+			},
+			{
+				"id": "homes-offers-configurator",
+				"title": "Generator ofert marketingowych",
+				"description": "Jako full stack developer w Lark stworzyłem generator spersonalizowanych, gotowych do druku katalogów i ofert.",
+				"small-description": "Jako full stack developer w <a href='https://larkfactory.com/' target='_blank'>Lark</a> samodzielnie stworzyłem generator ofert, który pozwala handlowcom na stworzenie gotowej do druku, spersonalizowanej oferty marketingowej.",
+				"key-points": [
+					{
+						"title": "Edycja inline i layout",
+						"description": "Edycja treści inline, upload metodą drag-and-drop i kadrowanie zdjęć z automatycznym dopasowaniem layoutu."
+					},
+					{
+						"title": "Model klasyfikacji obrazów",
+						"description": "Autorski model klasyfikacji obrazów kategoryzujący zdjęcia wg pomieszczeń, podpowiadający gotowe realizacje w konfiguratorze."
+					},
+					{
+						"title": "Kliencki eksport do PDF",
+						"description": "Kliencki rendering i eksport gotowych katalogów do PDF."
+					}
+				]
+			},
+			{
+				"id": "mobile-homes-order-app",
+				"title": "System zamówień produkcyjnych domów mobilnych",
+				"description": "Jako full stack developer w Lark zbudowałem system klasy B2B, do konfiguracji i zarządzania zamówieniami produkcyjnymi domów mobilnych, łączący dystrybutorów, sprzedaż i produkcję.",
+				"small-description": "Jako full stack developer w <a href='https://larkfactory.com/' target='_blank'>Lark</a> samodzielnie zbudowałem system klasy B2B do tworzenia specyfikacji produkcyjnej, na podstawie której produkowane są domy mobilne i modułowe.",
+				"key-points": [
+					{
+						"title": "SPA w Angular i Firebase",
+						"description": "Samodzielne zbudowanie SPA w Angular (Standalone Components) z serverless backendem na Firebase."
+					},
+					{
+						"title": "Formularze oparte na schematach",
+						"description": "Zbudowanie dynamicznych formularzy reaktywnych automatycznie dostosowujących się do opcji produktowych na podstawie złożonych schematów z bazy."
+					},
+					{
+						"title": "Współpraca w czasie rzeczywistym",
+						"description": "Wdrożenie współpracy w czasie rzeczywistym z blokowaniem sesji (lease-based locking) oraz kontrolą dostępu opartą na rolach."
+					},
+					{
+						"title": "Dokumenty produkcyjne PDF",
+						"description": "Kliencka generacja wielostronicowych dokumentów produkcyjnych PDF."
+					}
+				]
+			},
+			{
+				"id": "lark-service-app",
+				"title": "System obsługi reklamacji domów mobilnych",
+				"description": "Jako full stack developer w Lark stworzyłem platformę B2B2C do obsługi reklamacji i serwisu domów, z pełną historią zgłoszeń i zrozumiałym statusem dla klienta, łączącą produkcję i zespół serwisowy.",
+				"small-description": "Jako full stack developer w <a href='https://larkfactory.com/' target='_blank'>Lark</a> samodzielnie stworzyłem platformę klasy B2B2C do zgłaszania i obsługi reklamacji domów modułowych.",
+				"key-points": [
+					{
+						"title": "Architektura serverless",
+						"description": "Zaprojektowanie architektury serverless łączącej frontend, bazę czasu rzeczywistego i zdarzeniowy system powiadomień."
+					},
+					{
+						"title": "Reklamacje i powiadomienia",
+						"description": "Składanie reklamacji, kaskadowe usuwanie struktur, automatyczne maile ze zlokalizowanymi logami zmian."
+					},
+					{
+						"title": "Pełna lokalizacja",
+						"description": "Pełna lokalizacja interfejsu i routing'u (ngx-translate-router)."
+					}
+				]
+			}
+		]
+	},
+	"experience": {
+		"title": "Gdzie pracowałem",
+		"items": [
+			{
+				"id": "yarrl",
+				"role": "Frontend Developer",
+				"company": "Yarrl S.A.",
+				"website": "yarrl.pl",
+				"url": "https://yarrl.pl",
+				"duration": "Listopad 2023 – obecnie",
+				"description": "Software house tworzący dedykowane rozwiązania. Poza wsparciem istniejącej aplikacji dla BNP, w pozostałych projektach brałem pełną odpowiedzialność za architekturę i budowę frontendu od podstaw.",
+				"projects": [
+					{
+						"name": "BNP Genesys Cloud",
+						"summary": "wsparcie rozwoju aplikacji do zarządzania interakcjami i obsługi zapytań od klientów."
+					},
+					{
+						"name": "InPost Genesys Cloud",
+						"summary": "wewnętrzna aplikacja do inteligentnego wyszukiwania i kompleksowej obsługi zapytań od klientów z różnych kanałów komunikacji.",
+						"bullets": [
+							"Architektura frontendu w Angular 21 (Standalone Components) w warstwowej strukturze ze stanem opartym na Angular Signals.",
+							"Silnik operacji masowych na RxJS z asynchronicznym pollingiem zadań w tle i automatycznym odzyskiwaniem przerwanej sesji.",
+							"Wzorzec komponentów świadomych kontekstu (dependency injection): jeden komponent obsługujący różne schematy tabel i filtrów zależnie od widoku / routing i uprawnień użytkownika."
+						]
+					},
+					{
+						"name": "InPost Widget Callback",
+						"summary": "zbudowałem frontend widgetu zamawiania oddzwonienia lub rezerwacji terminu.",
+						"bullets": [
+							"Zarządzanie stanem wyłącznie w oparciu o Angular Signals, eliminując potrzebę ładowania ciężkich bibliotek w widgecie.",
+							"Pełna odpowiedzialność za architekturę: kompletny web component (@angular/elements) z izolacją w Shadow DOM i konfiguracją runtime przez atrybuty HTML."
+						]
+					},
+					{
+						"name": "AISEMA",
+						"summary": "Inteligentna platforma wyszukiwania finansowania UE. Pomaga badaczom i koordynatorom szybko znaleźć finansowanie i partnerów do projektów.",
+						"bullets": [
+							"Zaprojektowanie wielostopniowego kreatora wyszukiwania od konkursu, przez powiązane projekty, po dobór partnerów.",
+							"Implementacja dashboardów analitycznych (osie czasu, wykresy bąbelkowe i punktowe) z autorskim algorytmem rozsuwania nakładających się punktów na gęstych zbiorach danych."
+						]
+					},
+					{
+						"name": "Chatbot Widget",
+						"summary": "zbudowałem frontend widgetu asystenta zakupowego, który prowadzi konwersację, prezentuje dopasowane produkty i pomaga w procesie reklamacji."
+					},
+					{
+						"name": "Speech Analysis",
+						"summary": "platforma do analizy rozmów i oceny jakości pracy konsultantów dla dużego call center.",
+						"bullets": [
+							"Zaprojektowanie rozbudowanego modelu uprawnień w dół struktury organizacyjnej (entity → client → project → campaign).",
+							"Interaktywny interfejs analizy z dwukierunkową synchronizacją odtwarzania audio z odpowiednimi fragmentami transkrypcji."
+						]
+					}
+				]
+			},
+			{
+				"id": "larkfactory",
+				"role": "Fullstack Developer",
+				"company": "Lark Leisure Homes",
+				"website": "larkfactory.com",
+				"url": "https://larkfactory.com",
+				"duration": "Lipiec 2021 – obecnie",
+				"description": "Samodzielne projektowanie i wdrażanie narzędzi webowych (frontend i backend) dla producenta domów mobilnych i modułowych — jako jedyny programista, z pełną odpowiedzialnością za architekturę i wdrożenie.",
+				"projects": [
+					{
+						"name": "Konfigurator domów mobilnych",
+						"summary": "interaktywny konfigurator domów mobilnych, wspierający proces sprzedaży.",
+						"bullets": [
+							"Stworzyłem architekturę stanu w czystym JavaScript (wzorce obiektowe z rozdzielonymi modelami stanu produktu i użytkownika) oraz silnik renderujący, składający się z warstw graficznych.",
+							"Zbudowałem interaktywny edytor tekstur na HTML5 Canvas do wybrania dodatkowego materiału elewacji: maskowanie obszarów metodą drag-and-drop, skalowanie, wykrywanie krawędzi (analiza kanału alfa) oraz nakładanie materiałów wtórnych na żywo."
+						]
+					},
+					{
+						"name": "System zamówień produkcyjnych",
+						"summary": "system klasy B2B do tworzenia specyfikacji produkcyjnej, na podstawie której bezpośrednio produkowane są domy mobilne i modułowe.",
+						"bullets": [
+							"Zbudowałem dynamiczny, wieloetapowy formularz oparty na złożonych schematach — formularze reaktywne automatycznie dostosowują się do zmieniających się opcji produktowych.",
+							"Wdrożyłem współpracę w czasie rzeczywistym z blokowaniem sesji (lease-based locking z heartbeat, automatycznym zapisem i przejmowaniem edycji) oraz kontrolą dostępu opartą na rolach.",
+							"Automatyczne generowanie wielostronicowych specyfikacji produkcyjnych wykorzystywanych w produkcji domów."
+						]
+					},
+					{
+						"name": "System obsługi reklamacji",
+						"summary": "system klasy B2B2C do zgłaszania i obsługi reklamacji domów modułowych.",
+						"bullets": [
+							"Zaprojektowałem architekturę serverless łączącą frontend, bazę czasu rzeczywistego i zdarzeniowy system powiadomień e-mail generujący zlokalizowane, szczegółowe logi zmian w zgłoszeniu."
+						]
+					},
+					{
+						"name": "Generator ofert marketingowych",
+						"summary": "generator ofert marketingowych, który pozwala handlowcom na stworzenie gotowej do druku, spersonalizowanej oferty marketingowej.",
+						"bullets": [
+							"Wdrożyłem model AI do kategoryzacji zdjęć według pomieszczeń, usprawniający proces osadzania gotowych realizacji w ofertach.",
+							"Interaktywna edycja treści inline, wgrywanie plików drag-and-drop oraz kadrowanie zdjęć z możliwością dopasowania układu strony."
+						]
+					},
+					{
+						"name": "System CRM do leadów",
+						"summary": "narzędzie dla zespołu marketingu z automatyczną dystrybucją leadów ze stron internetowych do Google Sheet, z ich kontrolą i dashboardem."
+					}
+				]
+			}
+		]
+	},
+	"contact": {
+		"title": "Skontaktuj się",
+		"copyright": "© {{year}} Serhii Deineko. Wszystkie prawa zastrzeżone."
+	},
+	"uni": {
+		"github": "GitHub",
+		"watch-demo": "Obejrzyj demo",
+		"not-found": "Projekt nie znaleziony",
+		"enlarge-image": "Powiększ obraz",
+		"close": "Zamknij",
+		"show-more": "Pokaż więcej",
+		"show-less": "Pokaż mniej",
+		"loading": "Ładowanie",
+		"downloading": "Pobieranie",
+		"downloaded": "Pobrano",
+		"download-failed": "Pobieranie nie powiodło się",
+		"skip-to-content": "Przejdź do treści głównej",
+		"portrait": "Portret Serhiia Deineko",
+		"screenshot": "Zrzut ekranu",
+		"toggle-theme": "Przełącz jasny i ciemny motyw",
+		"change-language": "Zmień język"
+	}
+}

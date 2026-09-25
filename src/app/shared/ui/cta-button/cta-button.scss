@@ -1,0 +1,103 @@
+@use "breakpoints" as *;
+@use "layout" as *;
+
+.cta-button {
+	display: flex;
+	position: relative;
+	column-gap: 0.1rem;
+	align-items: center;
+	opacity: 0.85;
+	transition: var(--transition);
+	cursor: pointer;
+	border: 2px solid var(--accent-color);
+	background-color: transparent;
+	padding: 0.2rem 0.24rem;
+	color: var(--accent-color);
+	font-weight: 700;
+	font-size: var(--text-sm);
+	line-height: 1.2;
+	font-family: var(--font-sans);
+	text-decoration: none;
+
+	&:hover {
+		transform: translateY(-0.025rem);
+		opacity: 1;
+		background-color: var(--accent-color);
+		color: var(--bg-color);
+	}
+
+	&--busy {
+		cursor: progress;
+	}
+
+	/*
+		Одна ячейка сетки на иконку и спиннер: размер держит иконка, она никуда
+		не девается — только гаснет. Поэтому ширина кнопки постоянна.
+	*/
+	&__glyph {
+		display: inline-flex;
+		position: relative;
+		flex: none;
+		justify-content: center;
+		align-items: center;
+		width: 24px;
+		height: 24px;
+	}
+
+	&__icon {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: opacity 0.2s var(--ease);
+		width: 100%;
+		height: 100%;
+		font-weight: 500;
+
+		&--faded {
+			opacity: 0;
+		}
+	}
+
+	&__spinner {
+		--mdc-circular-progress-active-indicator-color: currentColor;
+		--mat-sys-primary: currentColor;
+		display: block;
+
+		position: absolute;
+		margin: auto;
+		inset: 0;
+		padding: 0;
+
+		::ng-deep svg {
+			max-width: none;
+		}
+	}
+
+	&__status {
+		position: absolute;
+		clip-path: inset(50%);
+		margin: -1px;
+		border: 0;
+		padding: 0;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	@include tablet {
+		padding: 0.18rem 0.22rem;
+	}
+
+	@include phone {
+		@include touch-target(0.52rem);
+		column-gap: 0.16rem;
+		justify-content: space-between;
+		padding: 0.16rem 0.2rem;
+		width: 100%;
+
+		&:hover {
+			transform: none;
+		}
+	}
+}

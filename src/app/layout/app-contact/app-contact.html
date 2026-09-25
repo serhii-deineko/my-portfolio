@@ -1,0 +1,22 @@
+<section class="contact" aria-labelledby="contact-title">
+	<div class="contact__content">
+		<h2 id="contact-title">{{ "contact.title" | translate }}</h2>
+
+		<div class="contact__links">
+			@for (channel of channels; track channel.id) {
+			<a
+				class="contact__link"
+				[href]="channel.href"
+				[appExternalLink]="channel.href"
+				[attr.aria-label]="channel.label + ': ' + channel.value">
+				<app-social-icon class="contact__icon" [name]="channel.id" />
+				{{ channel.value }}
+			</a>
+			}
+		</div>
+
+		<div class="contact__copyright">
+			{{ "contact.copyright" | translate: { year: currentYear } }}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,200 @@
+<main id="main-content" tabindex="-1">
+	<article class="detail">
+		@if (currentProject(); as project) {
+		<header class="detail__hero">
+			@if (!heroImageBroken()) {
+			<div
+				class="detail__ambient"
+				[style.background-image]="'url(' + heroImage() + ')'"
+				aria-hidden="true"
+				appPauseOffscreen></div>
+			<img
+				class="detail__preview"
+				[src]="heroImage()"
+				(error)="onHeroImageError()"
+				alt=""
+				aria-hidden="true"
+				fetchpriority="high"
+				appHeroImage />
+			}
+
+			<div class="detail__inner">
+				<div class="detail__content">
+					<p class="detail__eyebrow">
+						{{ "projects.detail.project" | translate }}
+						<span class="detail__index">{{ projectNumber() }}</span>
+						<span class="detail__index-rest">/ {{ projectTotal() }}</span>
+					</p>
+
+					<h1 class="detail__title">{{ project.title }}</h1>
+
+					<p
+						class="detail__description rich-text"
+						[innerHTML]="project['small-description']"></p>
+
+					@if (projectDefinition()?.demo?.length || projectDefinition()?.github) {
+					<div class="detail__links">
+						@for (demo of projectDefinition()?.demo; track demo.url) { @switch
+						(demo.type) { @case ("youtube") {
+						<app-cta-button
+							[targetUrl]="demo.url"
+							[buttonText]="'uni.watch-demo' | translate"
+							buttonIcon="play_arrow" />
+						} @default {
+						<app-cta-button
+							[targetUrl]="demo.url"
+							[buttonText]="
+													demo.label ||
+													('projects.cta-button.website' | translate)
+												"
+							buttonIcon="arrow_outward" />
+						} } } @if (projectDefinition()?.github) {
+						<a
+							class="detail__github"
+							[href]="projectDefinition()?.github"
+							[appExternalLink]="projectDefinition()?.github">
+							<app-social-icon class="detail__github-icon" name="github" />
+							{{ "uni.github" | translate }}
+						</a>
+						}
+					</div>
+					}
+				</div>
+			</div>
+		</header>
+
+		<div class="detail detail__content-wrapper">
+			<div class="detail__document">
+				@if (cases().length) {
+				<section class="detail__section" aria-labelledby="cases-heading">
+					<app-sub-header [count]="cases()" headingId="cases-heading">
+						{{ "projects.detail.decisions" | translate }}
+					</app-sub-header>
+
+					<ol class="detail__cases" role="list">
+						@for (item of cases(); track $index) {
+						<li class="detail__case">
+							<div class="detail__case-text">
+								<div class="detail__case-head">
+									<p class="detail__case-index" aria-hidden="true">
+										{{ item.index }}
+									</p>
+
+									@if (item.title) {
+									<h3 class="detail__case-title">{{ item.title }}</h3>
+									}
+								</div>
+
+								<p class="detail__case-desc">{{ item.description }}</p>
+							</div>
+
+							@if (item.screen; as screen) {
+							<ng-container
+								*ngTemplateOutlet="
+									screenshot;
+									context: { $implicit: screen, title: project.title }
+								" />
+							}
+						</li>
+						}
+					</ol>
+
+					@if (extraScreens().length) {
+					<div class="detail__extras">
+						@for (screen of extraScreens(); track screen.number) {
+						<ng-container
+							*ngTemplateOutlet="
+								screenshot;
+								context: { $implicit: screen, title: project.title }
+							" />
+						}
+					</div>
+					}
+				</section>
+				} @if (projectDefinition()?.tech?.length) {
+				<section class="detail__section" aria-labelledby="stack-heading">
+					<app-sub-header
+						[count]="projectDefinition()?.tech?.length ?? 0"
+						headingId="stack-heading">
+						{{ "projects.detail.stack" | translate }}
+					</app-sub-header>
+
+					<p class="detail__stack">
+						@for ( tech of projectDefinition()?.tech; track tech; let last = $last ) {
+						<span class="detail__stack-item">{{ tech }}</span>
+						@if (!last) {
+						<span class="detail__stack-sep" aria-hidden="true">/</span>
+						} }
+					</p>
+				</section>
+				} @let others = otherProjects(); @if (others.length) {
+				<nav class="detail__section detail__nav" aria-labelledby="nav-heading">
+					<app-sub-header [count]="others" headingId="nav-heading">
+						{{ "projects.detail.nav" | translate }}
+					</app-sub-header>
+
+					<ol class="detail__nav-list" role="list">
+						@for (item of others; track item.id) {
+						<li>
+							<a class="detail__nav-link" [routerLink]="['/project', item.id]">
+								<span class="detail__nav-num" aria-hidden="true">
+									{{ item.index }}
+								</span>
+
+								<span class="detail__nav-name">{{ item.title }}</span>
+
+								<span class="detail__nav-leader" aria-hidden="true"></span>
+
+								<span class="detail__nav-tech" aria-hidden="true">
+									{{ item.tech }}
+								</span>
+							</a>
+						</li>
+						}
+					</ol>
+				</nav>
+				}
+			</div>
+		</div>
+
+		@if (selectedImageSrc(); as image) {
+		<div
+			class="detail__modal"
+			[attr.aria-label]="'uni.enlarge-image' | translate"
+			(click)="onBackdropClick($event)"
+			(keydown.escape)="closeFullscreen()"
+			role="dialog"
+			aria-modal="true"
+			cdkTrapFocus
+			cdkTrapFocusAutoCapture>
+			<button
+				class="detail__modal-close"
+				[attr.aria-label]="'uni.close' | translate"
+				(click)="closeFullscreen()"
+				type="button">
+				<mat-icon fontIcon="close" aria-hidden="true" />
+			</button>
+			<img class="detail__modal-img" [src]="image" [alt]="project.title" />
+		</div>
+		} } @if (!currentProject()) {
+		<p class="detail__empty">{{ "uni.not-found" | translate }}</p>
+		}
+	</article>
+</main>
+
+<ng-template #screenshot let-screen let-title="title">
+	<button
+		class="detail__case-visual"
+		[attr.aria-label]="('uni.enlarge-image' | translate) + ': ' + title"
+		(click)="openFullscreen(screen.number)"
+		type="button">
+		<img
+			class="detail__case-img"
+			[src]="screen.src"
+			alt=""
+			loading="lazy"
+			decoding="async"
+			width="1600"
+			height="1000" />
+	</button>
+</ng-template>

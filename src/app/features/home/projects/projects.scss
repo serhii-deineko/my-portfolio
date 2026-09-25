@@ -1,0 +1,158 @@
+@use "breakpoints" as *;
+@use "layout" as *;
+
+.project {
+	@include container;
+	position: relative;
+	z-index: 2;
+	padding-bottom: 0.3rem;
+
+	&__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.8rem;
+		margin-top: 0.6rem;
+	}
+
+	&__card {
+		display: flex;
+		position: relative;
+		gap: 0.8rem;
+		transition: var(--transition);
+		contain: layout;
+
+		&--reversed {
+			flex-direction: row-reverse;
+		}
+
+		&--entering {
+			animation: fadeInUp 600ms var(--ease);
+		}
+	}
+
+	&__image {
+		z-index: 2;
+		transition: var(--transition);
+		width: 100%;
+		height: auto;
+	}
+
+	&__image-img {
+		aspect-ratio: 3 / 2;
+		width: 100%;
+		height: auto;
+		object-fit: cover;
+	}
+
+	&__content {
+		display: flex;
+		row-gap: 0.16rem;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+		transition: var(--transition);
+
+		width: 70%;
+		height: auto;
+	}
+
+	&__card-title {
+		transition: var(--transition);
+		color: var(--accent-color);
+		font-weight: 700;
+		font-size: var(--text-xxl);
+		line-height: 1.3;
+	}
+
+	&__description {
+		transition: var(--transition);
+		margin-bottom: 0.1rem;
+		color: var(--text);
+		font-weight: 400;
+		font-size: var(--text-md);
+		line-height: 1.4;
+		font-family: var(--font-sans);
+		text-wrap: balance;
+
+		::ng-deep a {
+			transition: var(--transition);
+			color: var(--accent-color);
+			text-decoration: underline;
+			text-underline-offset: 4px;
+		}
+	}
+
+	&__link {
+		margin-top: 0.16rem;
+	}
+
+	&__tech-list {
+		display: none;
+	}
+}
+
+@include tablet {
+	.project {
+		&__list {
+			gap: 0.64rem;
+			margin-top: 0.44rem;
+		}
+
+		&__card {
+			gap: 0.44rem;
+		}
+
+		&__content {
+			row-gap: 0.14rem;
+			width: 52%;
+		}
+
+		&__card-title {
+			font-size: clamp(0.3rem, 3.6vw, 0.36rem);
+		}
+
+		&__description {
+			font-size: var(--text-base);
+		}
+	}
+}
+
+@include phone {
+	.project {
+		padding-bottom: 0.2rem;
+
+		&__list {
+			gap: 0.56rem;
+			margin-top: 0.32rem;
+		}
+
+		&__card,
+		&__card--reversed {
+			flex-direction: column;
+			gap: 0.28rem;
+		}
+
+		&__content {
+			row-gap: 0.14rem;
+			width: 100%;
+		}
+
+		&__card-title {
+			font-size: clamp(0.26rem, 6.8vw, 0.36rem);
+			line-height: 1.2;
+			letter-spacing: -0.02em;
+			text-wrap: balance;
+		}
+
+		&__description {
+			font-size: var(--text-base);
+			line-height: 1.55;
+			text-wrap: pretty;
+		}
+
+		&__link {
+			align-self: stretch;
+			margin-top: 0.1rem;
+		}
+	}
+}

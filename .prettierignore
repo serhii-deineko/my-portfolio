@@ -1,0 +1,9 @@
+package-lock.json
+yarn.lock
+dist
+.vscode/*
+.angular/*
+.firebase/*
+out-tsc
+coverage
+node_modules

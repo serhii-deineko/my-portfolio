@@ -1,0 +1,47 @@
+<ng-template #label>
+	<span class="cta-button__text">{{ buttonText() }}</span>
+	@if (icon(); as glyph) {
+	<span class="cta-button__glyph">
+		<mat-icon
+			class="cta-button__icon"
+			[class.cta-button__icon--faded]="spinnerVisible()"
+			[fontIcon]="glyph"
+			aria-hidden="true" />
+
+		@if (spinnerVisible()) {
+		<mat-spinner
+			class="cta-button__spinner"
+			[diameter]="spinnerDiameter"
+			[strokeWidth]="spinnerStrokeWidth"
+			aria-hidden="true" />
+		}
+	</span>
+	}
+
+	<span class="cta-button__status" role="status">
+		@if (statusKey(); as key) { {{ key | translate }} }
+	</span>
+</ng-template>
+
+@if (routerLink(); as link) {
+<a
+	class="cta-button"
+	[routerLink]="link"
+	[attr.aria-label]="ariaLabel() || null"
+	[attr.data-umami-event]="buttonText()">
+	<ng-container *ngTemplateOutlet="label" />
+</a>
+} @else {
+<a
+	class="cta-button"
+	[class.cta-button--busy]="isBusy()"
+	[href]="targetUrl() || fileUrl() || null"
+	[appExternalLink]="targetUrl()"
+	[attr.download]="downloadName()"
+	[attr.aria-label]="ariaLabel() || null"
+	[attr.aria-busy]="isBusy() || null"
+	[attr.data-umami-event]="buttonText()"
+	(click)="onClick($event)">
+	<ng-container *ngTemplateOutlet="label" />
+</a>
+}

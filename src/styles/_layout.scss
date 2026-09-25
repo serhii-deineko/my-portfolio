@@ -1,0 +1,56 @@
+@use "breakpoints" as *;
+
+$gutter-column: clamp(0.32rem, 4vw, 0.56rem);
+
+@mixin container {
+	margin: 0 auto;
+	padding: 0 0.2rem;
+	max-width: max(12rem, 82vw);
+
+	@include tablet {
+		padding: 0 0.32rem;
+		max-width: none;
+	}
+
+	@include phone {
+		padding: 0 0.24rem;
+	}
+}
+
+@mixin touch-target($size: 0.5rem) {
+	min-width: $size;
+	min-height: $size;
+}
+
+@mixin wrap-anywhere {
+	word-break: break-word;
+	overflow-wrap: anywhere;
+}
+
+@mixin flex-center($display: flex) {
+	display: $display;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin focus-ring($offset: 0.04rem) {
+	outline: 0.02rem solid var(--accent-color);
+	outline-offset: $offset;
+}
+
+@mixin switcher-size {
+	width: 0.75rem;
+	height: 0.37rem;
+
+	@include phone {
+		height: 0.44rem;
+	}
+}
+
+@mixin switcher-shape {
+	border-radius: 0.34rem;
+
+	@include phone {
+		border-radius: 99em;
+	}
+}

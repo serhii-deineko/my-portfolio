@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Ribbon spike — square-section marquee tape</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&display=swap" />
+
+		<style>
+			html,
+			body {
+				margin: 0;
+				background: #000;
+				height: 100%;
+				overflow: hidden;
+			}
+
+			canvas {
+				display: block;
+			}
+
+			.hud {
+				position: fixed;
+				top: 12px;
+				left: 14px;
+				z-index: 10;
+				color: #6c6c6c;
+				font-size: 12px;
+				line-height: 1.6;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				letter-spacing: 0.04em;
+				pointer-events: none;
+				user-select: none;
+			}
+
+			.hud__fps {
+				color: #e8e8e8;
+				font-size: 14px;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.boot {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				translate: -50% -50%;
+				color: #555;
+				font-size: 13px;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				letter-spacing: 0.08em;
+			}
+
+			.boot--done {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="hud">
+			<div class="hud__fps"><span id="fps">--</span> fps</div>
+			<div>drag · orbit &nbsp; scroll · zoom</div>
+		</div>
+
+		<div class="boot" id="boot">BUILDING TEXTURE…</div>
+
+		<script>
+			// ribbon.js is a real ES module now, and file:// blocks module imports
+			// outright. A static import that never resolves fails silently, so turn
+			// that into something actionable.
+			setTimeout(() => {
+				if (window.__ribbonBooted) return;
+				document.getElementById("boot").innerHTML =
+					"ribbon.js did not load.<br />serve the folder instead:<br /><br />" +
+					"<b>cd spike &amp;&amp; python3 -m http.server 8000</b>";
+			}, 1500);
+		</script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+					"three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+				}
+			}
+		</script>
+
+		<script type="module">
+			import * as THREE from "three";
+			import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+			import {
+				SEGMENTS,
+				RIBBON_W,
+				U_REPEAT,
+				buildTexture,
+				buildCurve,
+				buildRibbonGeometry,
+				createTapeMaterial
+			} from "./ribbon.js";
+
+			window.__ribbonBooted = true;
+
+			/* ------------------------------------------------------------------ *
+			 * Scene
+			 * ------------------------------------------------------------------ */
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			renderer.setClearColor(0x000000, 1);
+			document.body.appendChild(renderer.domElement);
+
+			const scene = new THREE.Scene();
+			scene.background = new THREE.Color(0x000000);
+
+			const camera = new THREE.PerspectiveCamera(
+				45,
+				window.innerWidth / window.innerHeight,
+				0.1,
+				200
+			);
+			camera.position.set(0, 1.6, 10.5);
+
+			const controls = new OrbitControls(camera, renderer.domElement);
+			controls.enableDamping = true;
+			controls.dampingFactor = 0.08;
+			controls.minDistance = 3;
+			controls.maxDistance = 40;
+
+			const key = new THREE.DirectionalLight(0xffffff, 4);
+			key.position.set(-8, 10, 6); // upper left, slightly in front
+			scene.add(key);
+			scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+
+			const curve = buildCurve();
+			const geometry = buildRibbonGeometry(curve, {
+				segments: SEGMENTS,
+				width: RIBBON_W,
+				uRepeat: U_REPEAT
+			});
+
+			const material = createTapeMaterial();
+
+			const mesh = new THREE.Mesh(geometry, material);
+			mesh.rotation.x = 0.35;
+			scene.add(mesh);
+
+			const boot = document.getElementById("boot");
+
+			buildTexture()
+				.then(tex => {
+					tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+					material.map = tex;
+					material.needsUpdate = true;
+					boot.classList.add("boot--done");
+
+					const len = curve.getLength();
+					console.log(
+						`curve length ${len.toFixed(2)} · u repeats ${U_REPEAT} · ` +
+							`aspect-neutral at ${(len / (16 * RIBBON_W)).toFixed(2)} repeats`
+					);
+				})
+				.catch(err => {
+					boot.textContent = `TEXTURE FAILED — ${err.message}`;
+					console.error(err);
+				});
+
+			/* ------------------------------------------------------------------ *
+			 * Loop
+			 * ------------------------------------------------------------------ */
+
+			const fpsEl = document.getElementById("fps");
+			let frames = 0;
+			let fpsClock = performance.now();
+			const clock = new THREE.Clock();
+
+			function animate() {
+				requestAnimationFrame(animate);
+
+				mesh.rotation.y += clock.getDelta() * 0.16;
+				controls.update();
+				renderer.render(scene, camera);
+
+				frames++;
+				const now = performance.now();
+				if (now - fpsClock >= 500) {
+					fpsEl.textContent = Math.round((frames * 1000) / (now - fpsClock));
+					frames = 0;
+					fpsClock = now;
+				}
+			}
+			animate();
+
+			window.addEventListener("resize", () => {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize(window.innerWidth, window.innerHeight);
+			});
+		</script>
+	</body>
+</html>

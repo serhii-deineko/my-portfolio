@@ -1,0 +1,46 @@
+<section class="project">
+	<app-sub-header [count]="cards()" headingId="project-title">
+		{{ "projects.title" | translate }}
+	</app-sub-header>
+
+	<div class="project__container">
+		<div class="project__list">
+			@for (project of cards(); track project.id; let i = $index) {
+			<div
+				class="project__card"
+				[class.project__card--reversed]="i % 2 === 1"
+				animate.enter="project__card--entering">
+				<div class="project__image">
+					<img
+						class="project__image-img"
+						[alt]="('uni.screenshot' | translate) + ': ' + project.title"
+						[src]="project.image"
+						loading="lazy"
+						decoding="async" />
+				</div>
+				<div class="project__content">
+					<ul
+						class="project__tech-list"
+						[attr.aria-label]="'projects.detail.stack' | translate">
+						@for (tech of project.tech; track tech) {
+						<li class="project__tech-item">{{ tech }}</li>
+						}
+					</ul>
+
+					<h3 class="project__card-title">{{ project.title }}</h3>
+					<p class="project__description" [innerHTML]="project['small-description']"></p>
+
+					<app-cta-button
+						class="project__link"
+						[buttonText]="'projects.cta-button.website' | translate"
+						[ariaLabel]="
+								('projects.cta-button.website' | translate) + ': ' + project.title
+							"
+						[routerLink]="'/project/' + project.id"
+						buttonIcon="call_made" />
+				</div>
+			</div>
+			}
+		</div>
+	</div>
+</section>

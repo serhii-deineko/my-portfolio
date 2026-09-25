@@ -1,0 +1,327 @@
+@use "breakpoints" as *;
+@use "layout" as *;
+
+.hero {
+	@include container;
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	justify-content: center;
+	padding-bottom: 0.3rem;
+	min-height: calc(100vh - var(--nav-height));
+	scroll-margin-top: var(--nav-height);
+
+	@include desktop {
+		min-height: max(calc(100vh - var(--nav-height)), 6.8rem);
+	}
+
+	&::before {
+		position: absolute;
+		right: min(-2.5rem, calc(100% - 15.5rem));
+		bottom: -0.5rem;
+		translate: 25% 25%;
+		opacity: 0;
+		z-index: 0;
+		filter: blur(2rem) saturate(var(--saturation));
+		animation: heroGlowDrift 26s ease-in-out infinite alternate;
+		animation-play-state: inherit;
+		transition: opacity 2s linear;
+		background-image:
+			radial-gradient(
+				ellipse 8% 11% at 43% 40%,
+				color-mix(in srgb, var(--hero-glow-head) 55%, var(--hero-glow-body)) 0%,
+				color-mix(
+						in srgb,
+						color-mix(in srgb, var(--hero-glow-head) 55%, var(--hero-glow-body)) 20%,
+						transparent
+					)
+					55%,
+				transparent 100%
+			),
+			radial-gradient(
+				ellipse 10% 20% at 50% 50%,
+				var(--hero-glow-head) 0%,
+				color-mix(in srgb, var(--hero-glow-head) 24%, transparent) 58%,
+				transparent 100%
+			),
+			radial-gradient(
+				ellipse 11% 8% at 58% 62%,
+				color-mix(in srgb, var(--hero-glow-body) 82%, transparent) 0%,
+				transparent 100%
+			),
+			radial-gradient(
+				ellipse 25% 25% at 50% 70%,
+				var(--hero-glow-body) 0%,
+				color-mix(in srgb, var(--hero-glow-body) 60%, transparent) 45%,
+				color-mix(in srgb, var(--hero-glow-body) 14%, transparent) 80%,
+				transparent 100%
+			);
+		aspect-ratio: 1853 / 1601;
+		height: calc((100% + 1.5rem) * 2);
+		pointer-events: none;
+		content: "";
+		user-select: none;
+	}
+
+	&--revealed::before {
+		opacity: 1;
+	}
+
+	&__image {
+		position: absolute;
+		right: min(-2rem, calc(100% - 15rem));
+		bottom: -0.5rem;
+		z-index: 1;
+		max-width: none;
+		height: calc(100% + 1.5rem);
+		user-select: none;
+
+		&--revealed {
+			animation: heroImageReveal 2s linear backwards;
+		}
+	}
+
+	&__content {
+		position: relative;
+		z-index: 1;
+	}
+
+	&__subtitle {
+		opacity: 0;
+		animation: fadeInUp 1s 0.5s forwards;
+		margin: 0 0 0.2rem 0.04rem;
+		color: var(--text-color-highlight);
+		font-size: var(--text-md);
+		font-family: var(--font-mono);
+	}
+
+	&__title {
+		opacity: 0;
+		animation: fadeInUp 1s 0.7s forwards;
+		margin: 0 0 0.15rem 0;
+		color: var(--text-color);
+		font-weight: 700;
+		font-size: 0.65rem;
+		line-height: 1.1;
+		font-family: var(--font-sans);
+	}
+
+	&__subtitle-large {
+		opacity: 0;
+		animation: fadeInUp 1s 0.9s forwards;
+		margin: 0 0 0.3rem 0;
+		width: 50%;
+		color: var(--accent-color);
+		font-weight: 700;
+		font-size: 0.6rem;
+		font-family: var(--font-sans);
+	}
+
+	&__description {
+		margin-bottom: 0.4rem;
+		max-width: 5.4rem;
+		min-height: 0.54rem;
+	}
+
+	&__paragraph {
+		opacity: 0;
+		animation: fadeInUp 1s 1.1s forwards;
+		color: var(--text-color-secondary);
+		font-size: var(--text-md);
+		line-height: 1.5;
+	}
+
+	&__strong {
+		color: var(--text-color-highlight);
+	}
+
+	&__em-underline {
+		color: var(--text-color-highlight);
+		text-decoration: underline;
+		text-decoration-color: var(--accent-color);
+		text-underline-offset: 0.04rem;
+	}
+
+	&__cta {
+		display: flex;
+		gap: 0.24rem;
+		opacity: 0;
+		animation: fadeInUp 1s 1.3s forwards;
+	}
+}
+
+.splitter {
+	display: flex;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	align-items: center;
+	z-index: 2;
+	background-color: var(--accent-color);
+	width: 100%;
+	height: 0.7rem;
+	overflow: hidden;
+
+	&__wrapper {
+		display: flex;
+		position: relative;
+		z-index: 1;
+		animation: scrollLeft 30s linear infinite;
+		width: max-content;
+	}
+
+	&__content {
+		display: flex;
+		flex-shrink: 0;
+		justify-content: flex-start;
+		gap: 0.25rem;
+		padding-right: 0.25rem;
+		width: max-content;
+	}
+
+	&__content-item {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		gap: 0.25rem;
+	}
+
+	&__icon {
+		filter: invert(1);
+		height: 0.7rem;
+	}
+
+	&__label {
+		display: flex;
+		align-items: center;
+		color: var(--bg-color);
+		font-weight: 700;
+		font-size: var(--text-lg);
+		font-family: var(--font-sans);
+		letter-spacing: 0.025em;
+		white-space: nowrap;
+	}
+}
+
+:host-context(body.dark-mode) {
+	.splitter {
+		&__icon {
+			filter: none !important;
+		}
+	}
+}
+
+@keyframes heroGlowDrift {
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+		rotate: 0deg;
+		scale: 1 1;
+	}
+	33% {
+		transform: translate3d(-2.5%, 2%, 0);
+		rotate: 2.5deg;
+		scale: 1.06 0.95;
+	}
+	66% {
+		transform: translate3d(2%, -2.5%, 0);
+		rotate: -2deg;
+		scale: 0.95 1.06;
+	}
+}
+
+@keyframes heroImageReveal {
+	from {
+		filter: contrast(var(--hero-image-reveal-contrast))
+			brightness(var(--hero-image-reveal-brightness));
+	}
+	to {
+		filter: contrast(1) brightness(1);
+	}
+}
+
+@keyframes scrollLeft {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(calc(-100% / 2));
+	}
+}
+
+@include tablet {
+	.hero {
+		padding-top: calc(var(--nav-height) + 0.24rem);
+		padding-bottom: 0.9rem;
+		min-height: calc(100vh - var(--nav-height));
+
+		&::before,
+		&__image {
+			display: none;
+		}
+
+		&__title {
+			font-size: clamp(0.42rem, 6.4vw, 0.6rem);
+		}
+
+		&__subtitle-large {
+			width: 100%;
+			max-width: 7rem;
+			font-size: clamp(0.36rem, 5.6vw, 0.54rem);
+		}
+
+		&__description {
+			max-width: 6.4rem;
+			min-height: 0;
+		}
+	}
+}
+
+@include phone {
+	.hero {
+		padding-top: calc(var(--nav-height) + 0.16rem);
+		padding-bottom: 0.4rem;
+		min-height: calc(100vh - var(--footer-height));
+
+		&__subtitle {
+			margin: 0 0 0.16rem;
+			font-size: clamp(0.155rem, 4.2vw, 0.18rem);
+		}
+
+		&__title {
+			margin-bottom: 0.12rem;
+			font-size: clamp(0.32rem, 9vw, 0.48rem);
+			letter-spacing: -0.02em;
+		}
+
+		&__subtitle-large {
+			margin-bottom: 0.24rem;
+			width: 100%;
+			font-size: clamp(0.28rem, 7.6vw, 0.42rem);
+			letter-spacing: -0.02em;
+			text-wrap: balance;
+		}
+
+		&__description {
+			margin-bottom: 0.32rem;
+			max-width: none;
+			min-height: 0;
+		}
+
+		&__paragraph {
+			font-size: var(--text-base);
+			line-height: 1.6;
+			text-wrap: pretty;
+		}
+
+		&__cta {
+			row-gap: 0.16rem;
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
+
+	.splitter {
+		display: none;
+	}
+}

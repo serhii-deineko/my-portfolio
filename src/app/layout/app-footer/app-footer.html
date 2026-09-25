@@ -1,0 +1,15 @@
+@if (!isHidden()) {
+<footer class="footer">
+	<div class="footer__icons">
+		@for (channel of channels; track channel.id) {
+		<a
+			class="footer__link"
+			[href]="channel.href"
+			[appExternalLink]="channel.href"
+			[attr.aria-label]="channel.label">
+			<app-social-icon class="footer__icon" [name]="channel.id" />
+		</a>
+		}
+	</div>
+</footer>
+}

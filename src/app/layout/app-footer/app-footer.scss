@@ -1,0 +1,80 @@
+@use "breakpoints" as *;
+@use "layout" as *;
+
+:host {
+	display: contents;
+}
+
+.footer {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: var(--z-header);
+	margin: 0.24rem 0;
+
+	&__icons {
+		display: flex;
+		justify-content: center;
+		gap: 0.24rem;
+	}
+
+	&__link {
+		@include flex-center;
+		transition: var(--transition);
+		border-radius: 99em;
+		background-color: var(--bg);
+		width: 0.4rem;
+		height: 0.4rem;
+
+		&:is(:hover, :focus-visible) {
+			transform: translateY(-0.03rem);
+
+			.footer__icon {
+				filter: var(--social-icon-filter-hover);
+			}
+		}
+
+		&:focus-visible {
+			@include focus-ring;
+		}
+	}
+
+	&__icon {
+		--social-icon-size: 0.2rem;
+	}
+}
+
+@include tablet {
+	.footer {
+		margin: 0.16rem;
+
+		&__icons {
+			gap: 0.18rem;
+		}
+	}
+}
+
+@include phone {
+	.footer {
+		margin: 0.14rem 0;
+
+		&__icons {
+			gap: 0.1rem;
+		}
+
+		&__link {
+			@include touch-target;
+			width: 0.5rem;
+			height: 0.5rem;
+
+			&:is(:hover, :focus-visible) {
+				transform: none;
+			}
+		}
+
+		&__icon {
+			--social-icon-size: 0.22rem;
+		}
+	}
+}

@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Ribbon layout spike — scroll mockup</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@100..900&display=swap" />
+
+		<style>
+			html,
+			body {
+				margin: 0;
+				background: #f2f2f2;
+			}
+
+			/* Dead mockup: the page scrolls this normally, the tape reads on top. */
+			.shot {
+				display: block;
+				filter: brightness(0.85);
+				width: 100%;
+				height: auto;
+				pointer-events: none;
+				user-select: none;
+			}
+
+			.gl {
+				position: fixed;
+				inset: 0;
+				z-index: 2;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+
+			.chrome {
+				position: fixed;
+				z-index: 3;
+				color: #f4f4f4;
+				font-size: 12px;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+				letter-spacing: 0.04em;
+			}
+
+			.variant {
+				top: 14px;
+				left: 16px;
+				border-radius: 4px;
+				background: rgba(10, 10, 10, 0.82);
+				padding: 8px 12px;
+				pointer-events: none;
+				user-select: none;
+			}
+
+			.variant__keys {
+				margin-top: 4px;
+				color: #7d7d7d;
+				font-size: 11px;
+			}
+
+			.variant__keys b {
+				color: #f4f4f4;
+				font-weight: 400;
+			}
+
+			.panel {
+				right: 16px;
+				bottom: 16px;
+				border-radius: 4px;
+				background: rgba(10, 10, 10, 0.82);
+				padding: 10px 12px;
+				width: 216px;
+			}
+
+			.panel__row {
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 3px;
+				color: #9a9a9a;
+			}
+
+			.panel__row b {
+				color: #f4f4f4;
+				font-weight: 400;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.panel__sep {
+				margin: 8px 0;
+				border-top: 1px solid #333;
+			}
+
+			.panel__field {
+				display: block;
+				margin-bottom: 7px;
+				color: #9a9a9a;
+			}
+
+			.panel__field span {
+				display: flex;
+				justify-content: space-between;
+				margin-bottom: 2px;
+			}
+
+			.panel__field b {
+				color: #f4f4f4;
+				font-weight: 400;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.panel input {
+				display: block;
+				width: 100%;
+				accent-color: #f4f4f4;
+			}
+
+			.boot {
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				translate: -50% -50%;
+				z-index: 4;
+				border-radius: 4px;
+				background: rgba(10, 10, 10, 0.92);
+				padding: 16px 20px;
+				color: #d8d8d8;
+				font-size: 13px;
+				line-height: 1.7;
+				font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+			}
+
+			.boot--done {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<img class="shot" id="shot" src="./screencapture.png" alt="" />
+		<canvas class="gl" id="gl"></canvas>
+
+		<div class="chrome variant">
+			<div id="variantName">1 · SPLITTER</div>
+			<div class="variant__keys">
+				<b>1</b> splitter <b>2</b> growth <b>3</b> rule <b>4</b> flythrough
+				<b>5</b> spine
+			</div>
+		</div>
+
+		<div class="chrome panel">
+			<div class="panel__row"><span>scroll</span><b id="rProgress">0.000</b></div>
+			<div class="panel__row"><span>fps</span><b id="rFps">--</b></div>
+			<div class="panel__sep"></div>
+			<label class="panel__field">
+				<span>tape width <b id="vWidth">–</b></span>
+				<input type="range" id="sWidth" min="6" max="180" step="1" />
+			</label>
+			<label class="panel__field">
+				<span>twist <b id="vTwist">–</b></span>
+				<input type="range" id="sTwist" min="0" max="3" step="0.05" />
+			</label>
+			<label class="panel__field">
+				<span>camera fov <b id="vFov">–</b></span>
+				<input type="range" id="sFov" min="20" max="110" step="1" />
+			</label>
+		</div>
+
+		<div class="boot" id="boot">BUILDING TEXTURE…</div>
+
+		<script>
+			// file:// blocks ES module imports outright, and a static import that
+			// never resolves fails silently. Turn that into something actionable.
+			setTimeout(() => {
+				if (window.__layoutBooted) return;
+				document.getElementById("boot").innerHTML =
+					"ribbon.js did not load.<br />serve the folder instead:<br /><br />" +
+					"<b>cd spike &amp;&amp; python3 -m http.server 8000</b>";
+			}, 1500);
+		</script>
+
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+				}
+			}
+		</script>
+
+		<script type="module">
+			import * as THREE from "three";
+			import {
+				buildTexture,
+				buildCurve,
+				buildRibbonGeometry,
+				createTapeMaterial,
+				aspectRepeats
+			} from "./ribbon.js";
+
+			window.__layoutBooted = true;
+
+			/* ------------------------------------------------------------------ *
+			 * Where things are in screencapture.png
+			 *
+			 * Measured off the capture, stored as fractions of it rather than
+			 * pixels, because the mockup stretches the image to whatever the
+			 * viewport is. Multiply by the rendered size to get document px.
+			 *
+			 * The capture stops after the projects section, so there is no
+			 * work-history or contacts to divide. Rule occurrences 2 and 3 sit in
+			 * the real gaps between the project cards as stand-ins — the numbers
+			 * are here to be retuned against a fuller capture.
+			 * ------------------------------------------------------------------ */
+
+			const SHOT_W = 2880;
+			const SHOT_H = 5064;
+
+			const M = {
+				stripTop: 1496 / SHOT_H,
+				stripBottom: 1624 / SHOT_H,
+				projectsTop: 2117 / SHOT_H,
+				projectsBottom: 4930 / SHOT_H,
+				gutterCentreX: 148 / SHOT_W, // content starts at 296/2880
+				rules: [1761 / SHOT_H, 3030 / SHOT_H, 4016 / SHOT_H]
+			};
+
+			/* ------------------------------------------------------------------ *
+			 * Viewport <-> world
+			 *
+			 * The camera is pulled back so that one world unit is one CSS pixel at
+			 * z = 0. That makes every placement below a direct pixel measurement
+			 * off the capture, and the fov slider changes only how hard the
+			 * perspective bites, never the scale.
+			 * ------------------------------------------------------------------ */
+
+			let VW = 0;
+			let VH = 0;
+			let shotH = 0;
+
+			function readViewport() {
+				VW = document.documentElement.clientWidth;
+				VH = document.documentElement.clientHeight;
+				shotH = VW * (SHOT_H / SHOT_W);
+			}
+
+			const docY = n => n * shotH; // capture fraction -> document px
+			const pxX = n => n * VW; // capture fraction -> viewport px
+			const worldX = px => px - VW / 2;
+			const worldY = dy => VH / 2 - (dy - window.scrollY);
+
+			const clamp01 = v => (v < 0 ? 0 : v > 1 ? 1 : v);
+			const range = (v, a, b) => clamp01((v - a) / (b - a || 1));
+			const smooth = t => t * t * (3 - 2 * t);
+
+			/* ------------------------------------------------------------------ *
+			 * Renderer
+			 * ------------------------------------------------------------------ */
+
+			readViewport();
+
+			const renderer = new THREE.WebGLRenderer({
+				canvas: document.getElementById("gl"),
+				antialias: true,
+				alpha: true
+			});
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			renderer.setSize(VW, VH, false);
+			renderer.setClearColor(0x000000, 0); // only the lit tape shows
+
+			const scene = new THREE.Scene();
+
+			const camera = new THREE.PerspectiveCamera(45, VW / VH, 1, 120000);
+
+			const key = new THREE.DirectionalLight(0xffffff, 4);
+			key.position.set(-8, 10, 6); // upper left, same as ribbon.html
+			scene.add(key);
+			scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+
+			const params = { width: 64, twist: 0.4, fov: 45 };
+
+			function pixelCamera(fov = params.fov) {
+				camera.fov = fov;
+				camera.aspect = VW / VH;
+				camera.up.set(0, 1, 0);
+				camera.position.set(0, 0, VH / 2 / Math.tan((fov * Math.PI) / 360));
+				camera.lookAt(0, 0, 0);
+				camera.updateProjectionMatrix();
+			}
+
+			/* ------------------------------------------------------------------ *
+			 * Materials — one slot per mesh so each can carry its own texture
+			 * offset. Clones share the canvas source, so the map uploads once.
+			 * ------------------------------------------------------------------ */
+
+			const slots = [];
+
+			function tapeSlot(overrides) {
+				const material = createTapeMaterial(overrides);
+				slots.push(material);
+				return material;
+			}
+
+			/* ------------------------------------------------------------------ *
+			 * Curve helpers. Open curves are uncapped, so every one of these runs
+			 * its ends well past the viewport edge where they cannot be seen.
+			 * ------------------------------------------------------------------ */
+
+			function openCurve(points) {
+				const curve = new THREE.CatmullRomCurve3(points, false, "catmullrom", 0.5);
+				curve.arcLengthDivisions = 2000;
+				return curve;
+			}
+
+			function horizontalCurve(length, swayY, swayZ, cycles) {
+				const points = [];
+				for (let i = 0; i <= 80; i++) {
+					const t = i / 80;
+					points.push(
+						new THREE.Vector3(
+							(t - 0.5) * length,
+							Math.sin(t * Math.PI * 2 * cycles) * swayY,
+							Math.cos(t * Math.PI * 2 * cycles * 0.75) * swayZ
+						)
+					);
+				}
+				return openCurve(points);
+			}
+
+			function verticalCurve(length, swayX, swayZ, cycles) {
+				const points = [];
+				for (let i = 0; i <= 80; i++) {
+					const t = i / 80;
+					points.push(
+						new THREE.Vector3(
+							Math.sin(t * Math.PI * 2 * cycles) * swayX,
+							(0.5 - t) * length,
+							Math.cos(t * Math.PI * 2 * cycles * 0.8) * swayZ
+						)
+					);
+				}
+				return openCurve(points);
+			}
+
+			// Swap a mesh's geometry, disposing whatever it had.
+			function setGeometry(mesh, geometry) {
+				if (mesh.geometry) mesh.geometry.dispose();
+				mesh.geometry = geometry;
+			}
+
+			/* ================================================================== *
+			 * 1 · SPLITTER
+			 *
+			 * Stands in for the 2D marquee under the hero. The tape lies in the
+			 * band the strip occupies and is rolled just off square to the camera,
+			 * so it reads as flat tape caught at a shallow angle rather than a
+			 * bar. The z sway sends its ends away from the camera, which is what
+			 * makes it go edge-on towards the edges of the screen. Scroll drives
+			 * the texture along u, so the words travel exactly like the marquee.
+			 * ================================================================== */
+
+			const SPLITTER_ROLL = -0.17; // rad, tips the lit face toward the camera
+			const SPLITTER_SPEED = 1.7; // tape lengths travelled per page scroll
+
+			// A square section rolled off-square projects taller than it is wide.
+			// Solve back through that so the band really is the strip's height.
+			const rolledWidth = h =>
+				h / (Math.cos(SPLITTER_ROLL) + Math.abs(Math.sin(SPLITTER_ROLL)));
+
+			function makeSplitter(withGrowth) {
+				const material = tapeSlot();
+				const mesh = new THREE.Mesh(undefined, material);
+				const group = new THREE.Group();
+				group.add(mesh);
+
+				const segments = 320;
+				let uRepeat = 1;
+
+				function rebuild() {
+					const width = params.width;
+					// Kept shallow on purpose. The z sway is what sends the ends away
+					// from the camera and takes them edge-on, but the roll turns
+					// depth back into height, so anything larger walks the tape out
+					// of the strip's band and over the hero above it.
+					const curve = horizontalCurve(VW * 1.7, width * 0.06, width * 0.9, 0.85);
+					uRepeat = Math.max(1, Math.round(aspectRepeats(curve.getLength(), width)));
+					setGeometry(
+						mesh,
+						buildRibbonGeometry(curve, {
+							segments,
+							width,
+							uRepeat,
+							closed: false,
+							twist: params.twist * 0.25 // barely any
+						})
+					);
+					mesh.rotation.x = SPLITTER_ROLL;
+				}
+
+				function update(scrollY) {
+					const band = docY((M.stripTop + M.stripBottom) / 2);
+					mesh.position.set(0, worldY(band), 0);
+
+					// Absolute function of scrollY — scroll back and the words
+					// travel back with you. Nothing moves while the page is still.
+					if (material.map) {
+						material.map.offset.x = -(scrollY / shotH) * uRepeat * SPLITTER_SPEED;
+					}
+
+					if (!withGrowth) return;
+
+					// Draws itself in as the strip enters the viewport: from the
+					// moment the band touches the bottom edge to a third of the way
+					// up. One ring is 4 faces x 6 indices.
+					const enter = range(scrollY, band - VH, band - VH * 0.34);
+					const rings = Math.floor(smooth(enter) * segments);
+					mesh.geometry.setDrawRange(0, rings * 24);
+				}
+
+				return { name: withGrowth ? "GROWTH" : "SPLITTER", group, rebuild, update };
+			}
+
+			/* ================================================================== *
+			 * 3 · RECURRING RULE
+			 *
+			 * One tape crossing the page three times. Each occurrence gets its own
+			 * roll and twist, and picks up the texture where the previous one left
+			 * off, so it reads as the same object passing behind the layout rather
+			 * than three copies. Sits in measured empty bands, never over content.
+			 * ================================================================== */
+
+			const RULE_ROLL = [0.1, 0.44, 0.86];
+			const RULE_TWIST = [0.3, 0.8, 1.4];
+			const RULE_SPEED = 0.9;
+
+			function makeRule() {
+				const group = new THREE.Group();
+				const meshes = M.rules.map(() => {
+					const mesh = new THREE.Mesh(undefined, tapeSlot());
+					group.add(mesh);
+					return mesh;
+				});
+
+				let uRepeat = 1;
+
+				function rebuild() {
+					// The gaps these sit in are ~70px tall and the steepest roll
+					// already projects ~1.4x the tape's width, so the budget left
+					// for sway is small. Thin tape buys the room back — wind the
+					// width slider up and they will start clipping the cards.
+					const width = params.width * 0.4;
+					const curve = horizontalCurve(VW * 1.7, width * 0.12, width * 1.0, 1.05);
+					uRepeat = Math.max(1, Math.round(aspectRepeats(curve.getLength(), width)));
+
+					meshes.forEach((mesh, i) => {
+						setGeometry(
+							mesh,
+							buildRibbonGeometry(curve, {
+								segments: 300,
+								width,
+								uRepeat,
+								closed: false,
+								twist: params.twist * RULE_TWIST[i]
+							})
+						);
+						mesh.rotation.x = RULE_ROLL[i];
+					});
+				}
+
+				function update(scrollY) {
+					meshes.forEach((mesh, i) => {
+						mesh.position.set(0, worldY(docY(M.rules[i])), 0);
+						const map = mesh.material.map;
+						if (!map) return;
+						// Continuous u across the three: each starts a third of the
+						// texture further along than the last.
+						map.offset.x =
+							-(scrollY / shotH) * uRepeat * RULE_SPEED - (i * uRepeat) / 3;
+					});
+				}
+
+				return { name: "RECURRING RULE", group, rebuild, update };
+			}
+
+			/* ================================================================== *
+			 * 4 · FLYTHROUGH
+			 *
+			 * The one variant that owns the camera. It rides the torus knot from
+			 * ribbon.js, offset off the tube so the tape sweeps past rather than
+			 * swallowing the lens, and scroll pushes it along. Fades in off the
+			 * hero and back out as the projects section arrives — while it is up
+			 * it does cover the page, which is the point of a transition.
+			 * ================================================================== */
+
+			const FLY_SPAN = 0.09; // fraction of the knot travelled
+			const FLY_FOV = 75;
+			const FLY_SEGMENTS = 900;
+
+			function makeFlythrough() {
+				const material = tapeSlot({ transparent: true, opacity: 0 });
+				const mesh = new THREE.Mesh(undefined, material);
+				const group = new THREE.Group();
+				group.add(mesh);
+
+				const curve = buildCurve(); // unit knot, scaled by the mesh
+				const frames = curve.computeFrenetFrames(FLY_SEGMENTS, true);
+
+				let scale = 1;
+				const p = new THREE.Vector3();
+				const tangent = new THREE.Vector3();
+				const offset = new THREE.Vector3();
+
+				function rebuild() {
+					scale = VH * 0.85;
+					const width = params.width / scale; // build in knot units
+					const uRepeat = Math.max(
+						1,
+						Math.round(aspectRepeats(curve.getLength(), width))
+					);
+					setGeometry(
+						mesh,
+						buildRibbonGeometry(curve, {
+							segments: FLY_SEGMENTS,
+							width,
+							uRepeat,
+							closed: true,
+							twist: Math.round(params.twist) // whole turns keep the seam shut
+						})
+					);
+					mesh.scale.setScalar(scale);
+				}
+
+				function update(scrollY) {
+					const handover = docY(M.projectsTop);
+					// Held off until the hero has scrolled past being read, and gone
+					// again by the time the projects section lands. At rest at the
+					// top of the page there is nothing over the hero at all.
+					const fade =
+						smooth(range(scrollY, handover * 0.3, handover * 0.62)) *
+						(1 - smooth(range(scrollY, handover * 0.78, handover)));
+					material.opacity = fade;
+					mesh.visible = fade > 0.002;
+					if (!mesh.visible) return;
+
+					const s = range(scrollY, 0, handover) * FLY_SPAN;
+					const i = Math.min(FLY_SEGMENTS - 1, Math.floor(s * FLY_SEGMENTS));
+
+					curve.getPointAt(s, p).multiplyScalar(scale);
+					curve.getTangentAt(s, tangent);
+
+					// Step off the tube along the frame normal, and roll with the
+					// binormal — that is what gives the parallax its bank.
+					offset.copy(frames.normals[i]).multiplyScalar(params.width * 5);
+					camera.position.copy(p).add(offset);
+					camera.up.copy(frames.binormals[i]);
+					camera.lookAt(
+						p.x + offset.x + tangent.x * scale,
+						p.y + offset.y + tangent.y * scale,
+						p.z + offset.z + tangent.z * scale
+					);
+					camera.fov = params.fov;
+					camera.aspect = VW / VH;
+					camera.updateProjectionMatrix();
+				}
+
+				return {
+					name: "FLYTHROUGH",
+					group,
+					rebuild,
+					update,
+					ownsCamera: true,
+					fov: FLY_FOV
+				};
+			}
+
+			/* ================================================================== *
+			 * 5 · SPINE
+			 *
+			 * A rail down the left gutter beside the project cards, rolling on its
+			 * own axis as you scroll. The curve is vertical, so rolling it is just
+			 * a rotation about y. Runs a viewport past the section at both ends so
+			 * the open ends are never on screen.
+			 * ================================================================== */
+
+			const SPINE_ROLL = 2.6; // turns across the whole section
+
+			function makeSpine() {
+				const material = tapeSlot();
+				const mesh = new THREE.Mesh(undefined, material);
+				const group = new THREE.Group();
+				group.add(mesh);
+
+				function rebuild() {
+					const width = params.width * 0.45; // thin
+					const span = docY(M.projectsBottom - M.projectsTop) + VH * 2;
+					const curve = verticalCurve(span, width * 0.6, width * 2.2, 1.1);
+					const uRepeat = Math.max(
+						1,
+						Math.round(aspectRepeats(curve.getLength(), width))
+					);
+					setGeometry(
+						mesh,
+						buildRibbonGeometry(curve, {
+							segments: 420,
+							width,
+							uRepeat,
+							closed: false,
+							twist: params.twist * 0.5
+						})
+					);
+				}
+
+				function update(scrollY) {
+					const top = docY(M.projectsTop);
+					const bottom = docY(M.projectsBottom);
+					mesh.position.set(
+						worldX(pxX(M.gutterCentreX)),
+						worldY((top + bottom) / 2),
+						0
+					);
+					mesh.rotation.y = range(scrollY, top - VH, bottom) * Math.PI * 2 * SPINE_ROLL;
+				}
+
+				return { name: "SPINE", group, rebuild, update };
+			}
+
+			/* ------------------------------------------------------------------ *
+			 * Variant switching
+			 * ------------------------------------------------------------------ */
+
+			const variants = [
+				makeSplitter(false),
+				makeSplitter(true),
+				makeRule(),
+				makeFlythrough(),
+				makeSpine()
+			];
+
+			let active = null;
+			let activeIndex = 0;
+
+			const variantNameEl = document.getElementById("variantName");
+
+			function activate(index) {
+				if (active) scene.remove(active.group);
+				activeIndex = index;
+				active = variants[index];
+				scene.add(active.group);
+				variantNameEl.textContent = `${index + 1} · ${active.name}`;
+
+				if (active.fov) setSlider(fovSlider, active.fov);
+				else if (params.fov === FLY_FOV) setSlider(fovSlider, 45);
+
+				rebuildActive();
+			}
+
+			function rebuildActive() {
+				readViewport();
+				renderer.setSize(VW, VH, false);
+				pixelCamera();
+				active.rebuild();
+			}
+
+			// The capture is 6.5MB, so the page is still growing a scrollbar and
+			// relaying out well after the first frame. Poll the viewport instead
+			// of trusting a resize event: a stale VH silently shifts every
+			// placement below by half the difference.
+			function syncViewport() {
+				const w = VW;
+				const h = VH;
+				readViewport();
+				if (w === VW && h === VH) return;
+				renderer.setSize(VW, VH, false);
+				active.rebuild();
+			}
+
+			window.addEventListener("keydown", e => {
+				const n = Number(e.key);
+				if (n >= 1 && n <= variants.length) activate(n - 1);
+			});
+
+			/* ------------------------------------------------------------------ *
+			 * Panel
+			 * ------------------------------------------------------------------ */
+
+			const widthSlider = document.getElementById("sWidth");
+			const twistSlider = document.getElementById("sTwist");
+			const fovSlider = document.getElementById("sFov");
+			const progressEl = document.getElementById("rProgress");
+			const fpsEl = document.getElementById("rFps");
+			const widthOut = document.getElementById("vWidth");
+			const twistOut = document.getElementById("vTwist");
+			const fovOut = document.getElementById("vFov");
+
+			function setSlider(el, value) {
+				el.value = String(value);
+				el.dispatchEvent(new Event("input"));
+			}
+
+			widthSlider.addEventListener("input", () => {
+				params.width = Number(widthSlider.value);
+				widthOut.textContent = `${params.width}px`;
+				if (active) active.rebuild();
+			});
+
+			twistSlider.addEventListener("input", () => {
+				params.twist = Number(twistSlider.value);
+				twistOut.textContent = params.twist.toFixed(2);
+				if (active) active.rebuild();
+			});
+
+			fovSlider.addEventListener("input", () => {
+				params.fov = Number(fovSlider.value);
+				fovOut.textContent = `${params.fov}°`;
+				pixelCamera();
+			});
+
+			window.addEventListener("resize", () => {
+				if (active) rebuildActive();
+			});
+
+			// Late layout shifts (image load, scrollbar) need a rebuild too.
+			document.getElementById("shot").decode().then(() => rebuildActive());
+
+			/* ------------------------------------------------------------------ *
+			 * Boot
+			 * ------------------------------------------------------------------ */
+
+			const boot = document.getElementById("boot");
+
+			buildTexture()
+				.then(texture => {
+					texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+					// Clones share the canvas Source, so this uploads once and each
+					// mesh still gets its own offset. Do not touch needsUpdate on a
+					// clone — that re-uploads all 16MB of it for nothing.
+					slots.forEach(material => {
+						material.map = texture.clone();
+						material.needsUpdate = true;
+					});
+					boot.classList.add("boot--done");
+				})
+				.catch(err => {
+					boot.textContent = `TEXTURE FAILED — ${err.message}`;
+					console.error(err);
+				});
+
+			// Defaults: the tape starts exactly as tall as the strip it replaces.
+			readViewport();
+			setSlider(widthSlider, Math.round(rolledWidth(docY(M.stripBottom - M.stripTop))));
+			setSlider(twistSlider, 0.4);
+			setSlider(fovSlider, 45);
+			activate(0);
+
+			/* ------------------------------------------------------------------ *
+			 * Loop — every variant reads window.scrollY. Nothing here advances on
+			 * a clock, so a still page is a still tape.
+			 * ------------------------------------------------------------------ */
+
+			let frames = 0;
+			let fpsClock = performance.now();
+
+			function animate() {
+				requestAnimationFrame(animate);
+
+				syncViewport();
+
+				const scrollY = window.scrollY;
+				const scrollable = Math.max(1, document.body.scrollHeight - VH);
+
+				if (!active.ownsCamera) pixelCamera();
+				active.update(scrollY);
+
+				renderer.render(scene, camera);
+
+				progressEl.textContent = (scrollY / scrollable).toFixed(3);
+
+				frames++;
+				const now = performance.now();
+				if (now - fpsClock >= 500) {
+					fpsEl.textContent = Math.round((frames * 1000) / (now - fpsClock));
+					frames = 0;
+					fpsClock = now;
+				}
+			}
+			animate();
+		</script>
+	</body>
+</html>

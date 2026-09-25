@@ -1,0 +1,40 @@
+@use "layout" as *;
+
+.language-switcher {
+	@include switcher-shape;
+	@include switcher-size;
+	display: inline-flex;
+	position: relative;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.06rem;
+	transition: var(--transition);
+	cursor: pointer;
+	border: none;
+	background-color: var(--switcher-bg);
+	padding: 0 0.15rem 0 0.1rem;
+	color: var(--dark-color);
+	font-weight: 600;
+	font-size: var(--text-sm);
+	font-family: inherit;
+
+	&:hover {
+		opacity: 0.85;
+	}
+
+	:host-context(body.dark-mode) & {
+		background-color: var(--switcher-bg-dark);
+		color: var(--light);
+	}
+
+	&__icon {
+		fill: currentColor;
+		width: 0.22rem;
+		height: 0.22rem;
+	}
+
+	&__text {
+		font-weight: 600;
+		font-size: var(--text-sm);
+	}
+}

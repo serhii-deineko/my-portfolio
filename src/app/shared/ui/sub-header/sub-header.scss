@@ -1,0 +1,50 @@
+@use "breakpoints" as *;
+@use "layout" as *;
+
+:host {
+	display: block;
+}
+
+.sub-header {
+	border-bottom: 1.5px solid var(--border-color);
+	padding: 0 0 0.3rem 0;
+	color: var(--accent-color);
+	font-weight: 700;
+	font-size: var(--text-xxl);
+	line-height: 1.2;
+	font-family: var(--font-sans);
+	letter-spacing: -0.02em;
+	text-transform: none;
+	text-wrap: balance;
+
+	&__count {
+		position: relative;
+		top: -0.9em;
+		vertical-align: baseline;
+		margin-left: 0.5em;
+		color: var(--text-color-highlight);
+		font-weight: 500;
+		font-size: 0.44em;
+		line-height: 1;
+		font-family: var(--font-mono);
+		letter-spacing: 0.04em;
+
+		@include phone {
+			top: -0.75em;
+			margin-left: 0.4em;
+		}
+	}
+
+	@include tablet {
+		margin-bottom: 0.3rem;
+		padding-bottom: 0.2rem;
+		font-size: 0.36rem;
+	}
+
+	@include phone {
+		margin-bottom: 0.24rem;
+		padding-bottom: 0.16rem;
+		font-size: clamp(0.25rem, 6.4vw, 0.32rem);
+		letter-spacing: -0.015em;
+	}
+}

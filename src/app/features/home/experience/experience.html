@@ -1,0 +1,102 @@
+<section class="experience">
+	<app-sub-header [count]="'experience.items' | translate">
+		{{ "experience.title" | translate }}
+	</app-sub-header>
+
+	<ol class="experience__list" role="list">
+		@for (item of "experience.items" | translate; track item.id) {
+		<li class="experience__item" [class.experience__item--education]="item.isEducation">
+			<div class="experience__meta">
+				<p class="experience__company">{{ item.company }}</p>
+				<p class="experience__duration">{{ item.duration }}</p>
+
+				@if (item.url) {
+				<p class="experience__site">
+					<a class="experience__link" [href]="item.url" [appExternalLink]="item.url">
+						https://{{ item.website }}
+					</a>
+				</p>
+				}
+			</div>
+
+			<div class="experience__body">
+				<h3 class="experience__role">{{ item.role }}</h3>
+
+				@if (item.description) {
+				<p class="experience__description">{{ item.description }}</p>
+				} @if (item.points?.length) {
+				<ng-container *ngTemplateOutlet="bullets; context: { $implicit: item.points }" />
+				} @if (item.projects?.length) {
+				<div class="experience__group">
+					<ol class="experience__projects" role="list">
+						@for ( project of item.projects; track project.name; let index = $index ) {
+						@let key = item.id + "-" + index; @let projectPoints = project.bullets ??
+						[]; @let hidden = projectPoints.length > 1 ? projectPoints.length - 1 : 0;
+						@let open = isExpanded(key);
+
+						<li class="experience__project">
+							<div class="experience__project-head">
+								<h4 class="experience__project-name">{{ project.name }}</h4>
+
+								@if (project.summary) {
+								<p class="experience__project-summary">{{ project.summary }}</p>
+								}
+							</div>
+
+							@if (projectPoints.length) {
+							<ng-container
+								*ngTemplateOutlet="
+									bullets;
+									context: { $implicit: projectPoints.slice(0, 1) }
+								" />
+							} @if (hidden) {
+							<div
+								class="experience__collapse"
+								[class.experience__collapse--open]="open"
+								[attr.inert]="open ? null : ''"
+								[id]="key">
+								<div class="experience__collapse-inner">
+									<ng-container
+										*ngTemplateOutlet="
+											bullets;
+											context: { $implicit: projectPoints.slice(1) }
+										" />
+								</div>
+							</div>
+
+							<div class="experience__more">
+								<span class="experience__more-line" aria-hidden="true"></span>
+								<button
+									class="experience__more-button"
+									[attr.aria-controls]="key"
+									[attr.aria-expanded]="open"
+									(click)="toggle(key)"
+									type="button">
+									<span class="experience__more-icon" aria-hidden="true"></span>
+									@if (open) { {{ "uni.show-less" | translate }} } @else { {{
+									"uni.show-more" | translate }} }
+								</button>
+								<span class="experience__more-line" aria-hidden="true"></span>
+							</div>
+							}
+						</li>
+						}
+					</ol>
+				</div>
+				}
+			</div>
+		</li>
+		}
+	</ol>
+</section>
+
+<ng-template #bullets let-points>
+	<ul class="experience__solutions" role="list">
+		@for (point of points; track point) {
+		<li class="experience__solution">
+			<span class="experience__solution-bullet" aria-hidden="true">•</span>
+			<span class="experience__solution-text">{{ point }}</span>
+		</li>
+		}
+	</ul>
+</ng-template>

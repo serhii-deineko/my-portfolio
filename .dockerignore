@@ -1,0 +1,11 @@
+node_modules
+dist
+out-tsc
+.angular
+.firebase
+Dockerfile
+.dockerignore
+.git
+.gitignore
+.vscode
+*.md

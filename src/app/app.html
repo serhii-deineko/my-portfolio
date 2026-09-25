@@ -1,0 +1,20 @@
+<div class="app">
+	<a class="app__skip-link" href="#main-content">{{ "uni.skip-to-content" | translate }}</a>
+
+	<div class="app__progress" aria-hidden="true"></div>
+
+	<app-header />
+
+	<router-outlet />
+
+	<app-contact [id]="contactSection.id" [attr.aria-label]="contactSection.labelKey | translate" />
+
+	<app-footer />
+
+	<div class="app__spinner" [class.app__spinner--active]="pageLoading.isLoading()">
+		<mat-spinner
+			[attr.aria-label]="'uni.loading' | translate"
+			[diameter]="24"
+			[strokeWidth]="3" />
+	</div>
+</div>

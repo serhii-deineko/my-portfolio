@@ -1,0 +1,52 @@
+@use "breakpoints" as *;
+
+.home {
+	--section-space: 0.64rem;
+	--section-lead-in: calc(var(--section-space) * 2);
+
+	padding-bottom: 0;
+
+	&__section {
+		padding: var(--section-space) 0;
+		scroll-margin-top: 0.8rem;
+	}
+
+	&__section--hero {
+		min-height: calc(100vh + 0.7rem);
+		overflow: hidden;
+	}
+
+	&__section--hero + &__section {
+		padding-top: var(--section-lead-in);
+	}
+}
+
+@include tablet {
+	.home {
+		--section-space: 0.4rem;
+
+		&__section {
+			scroll-margin-top: calc(var(--nav-height) + 0.24rem);
+		}
+
+		&__section--hero {
+			padding: 0;
+		}
+	}
+}
+
+@include phone {
+	.home {
+		--section-space: 0.3rem;
+		--section-lead-in: var(--section-space);
+
+		&__section {
+			scroll-margin-top: calc(var(--nav-height) + 0.16rem);
+		}
+
+		&__section--hero {
+			padding: 0;
+			min-height: auto;
+		}
+	}
+}
