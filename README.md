@@ -13,7 +13,7 @@ to static HTML. Live at **[serhii.com.pl](https://serhii.com.pl)**.
 - **Dark / light theme** with no flash on first paint
 - **Responsive** — desktop, tablet and phone layouts
 - **SCSS design tokens** — CSS custom properties for colour, type scale and motion
-- **Firebase Hosting** with a GitHub Actions pipeline
+- **Firebase Hosting** — deployed manually with a single command
 
 ## Tech stack
 
@@ -120,15 +120,20 @@ yarn format       # write
 
 ## Deployment
 
-Pushing to `main` runs the GitHub Actions pipeline: lint → test → build
-(prerender) → deploy to Firebase Hosting.
-
-To deploy manually:
+Deployment is manual — there is no active CI pipeline, so pushing to `main`
+does not ship anything.
 
 ```bash
 yarn global add firebase-tools
 firebase login
 yarn deploy
+```
+
+`yarn deploy` builds and uploads, but runs no checks of its own. Run the gates
+first:
+
+```bash
+yarn lint && yarn test:ci
 ```
 
 To preview the exact production output locally on http://127.0.0.1:5000:
